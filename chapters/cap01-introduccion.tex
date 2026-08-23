@@ -77,12 +77,9 @@ Super IA & Consciente de su existencia; capaz de realizar cualquier tarea humana
 \subsection{Machine Learning: el núcleo de la IA}
 
 \begin{definicion}
-\textbf{Machine Learning} (aprendizaje automático): campo de la IA que se encarga de reconocer
-patrones desde los datos y de generalizar conocimiento a partir de la experiencia y de muchos
-datos.
+\textbf{Machine Learning} (aprendizaje automático): campo de la IA que se encarga de reconocer patrones desde los datos y de generalizar conocimiento a partir de la experiencia y de muchos datos.
 
-Definición de \textbf{Arthur Samuel}: ``el diseño y desarrollo de algoritmos que permiten a los
-computadores \emph{aprender sin ser explícitamente programados}''.
+Definición de \textbf{Arthur Samuel}: ``el diseño y desarrollo de algoritmos que permiten a los computadores \emph{aprender sin ser explícitamente programados}''.
 \end{definicion}
 
 No existe un comando ``\texttt{.learn}'', el aprendizaje se logra mediante un \textbf{algoritmo}.
@@ -111,28 +108,22 @@ Por refuerzo & Aprende mediante prueba, error y refuerzo & Robótica, videojuego
 \subsection{Deep Learning: aprendizaje por capas}
 
 \begin{definicion}
-\textbf{Deep Learning} (aprendizaje profundo): sistema capaz de aprender mediante algoritmos y
-\emph{sin intervención manual} de un usuario.
+\textbf{Deep Learning} (aprendizaje profundo): sistema capaz de aprender mediante algoritmos y \emph{sin intervención manual} de un usuario.
 \end{definicion}
 
 \begin{definicion}
-\textbf{Representación}: forma en que los datos son transformados y procesados a lo largo de
-las capas para extraer características relevantes de manera automática.
+\textbf{Representación}: forma en que los datos son transformados y procesados a lo largo de las capas para extraer características relevantes de manera automática.
 
 \textbf{Profundidad del modelo}: cantidad de capas sucesivas de representación.
 \end{definicion}
 
 \begin{advertencia}
-``Profundo'' \emph{no} significa comprensión más profunda; significa \emph{muchas capas
-sucesivas de representación}.
+``Profundo'' \emph{no} significa comprensión más profunda; significa \emph{muchas capas sucesivas de representación}.
 \end{advertencia}
 
 \textbf{¿Por qué despegó después de 2012?}
 
-Las ideas clave de la visión artificial (redes neuronales convolucionales y retropropagación)
-ya se entendían en 1990 y el algoritmo \textbf{LSTM} (memoria a corto y largo plazo) se
-desarrolló en 1997 y apenas ha cambiado. Pero hasta 2010, un computador de un terabyte era muy difícil
-de conseguir.
+Las ideas clave de la visión artificial (redes neuronales convolucionales y retropropagación) ya se entendían en 1990 y el algoritmo \textbf{LSTM} (memoria a corto y largo plazo) se desarrolló en 1997 y apenas ha cambiado. Pero hasta 2010, un computador de un terabyte era muy difícil de conseguir.
 
 \textbf{Tres nuevas figuras han impulsado el avance del aprendizaje automático:}
 \begin{enumerate}[topsep=2pt,itemsep=1pt]
@@ -165,3 +156,169 @@ Interpretabilidad & Mayor & Menor \\
 \begin{advertencia}
 El Deep Learning es más caro y menos interpretable, pero más eficaz en problemas complejos.
 \end{advertencia}
+
+\subsubsection{Cómo trabaja Deep Learning}
+La formalidad y rigurosidad matemática detrás de los algoritmos de DL se verán más adelante. Por ahora, una explicación intuitiva:
+
+El aprendizaje automático consiste en mapear \emph{entradas} (como imágenes) a \emph{objetivos} (como la etiqueta ``gato''), procesando muchos ejemplos de entradas-objetivos. En Deep Learning, este mapeo se realiza a través de una secuencia de \emph{transformaciones de datos simples}, que se aprenden mediante el procesamiento de muchos (realmente muchos) ejemplos.
+
+\begin{itemize}
+    \item El cómo funciona cada capa, es decir, la especificación de lo que hace cada una con sus datos de entrada, se almacena en lo que se denomina \textbf{pesos de la capa}.
+    \item En este contexto, \textbf{aprender} significa encontrar un conjunto de valores para los pesos de todas las capas de una red, tales que la red mapee correctamente las entradas iniciales a sus objetivos.
+    \item Para controlar el resultado de una red, son necesarias mediciones, en particular, \textbf{qué tan lejos está el resultado de lo esperado}. Esta es la \textbf{función de pérdida} de la red (también llamada función objetivo o de costo), la cual toma las predicciones ($Y'$) y el objetivo real ($Y$) calculando un puntaje de distancia (\textit{loss score}).
+    \item Esta puntuación se utiliza como \textbf{señal de retroalimentación para ajustar el valor de los pesos}, en una dirección que ayude a minimizar la puntuación de pérdida para el ejemplo actual.
+    \item Este ajuste es tarea del \textbf{optimizador}, que implementa lo que se denomina \textbf{algoritmo de retropropagación} (\textit{backpropagation}), el algoritmo central en el aprendizaje profundo.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+    >=latex,
+    box/.style={draw, rectangle, minimum width=4cm, minimum height=1.2cm, align=center},
+    weightbox/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.7cm, align=center},
+    roundbox/.style={draw, rectangle, rounded corners=5pt, minimum width=3cm, minimum height=1.2cm, align=center},
+    ell/.style={draw, ellipse, minimum width=3.5cm, minimum height=1.2cm, align=center}
+]
+
+% Nodos
+\node (input) at (0, 0) {Input X};
+\node[box] (layer1) at (0, -1.5) {Layer \\ (data transformation)};
+\node[weightbox] (weight1) at (-4, -1.5) {Weights};
+\node[box] (layer2) at (0, -3.5) {Layer \\ (data transformation)};
+\node[weightbox] (weight2) at (-4, -3.5) {Weights};
+\node[roundbox] (pred) at (0, -5.5) {Predictions \\ Y$'$};
+\node[roundbox] (target) at (4, -5.5) {True targets \\ Y};
+\node[ell] (loss) at (2, -7.5) {Loss function};
+\node[roundbox] (score) at (2, -9.5) {Loss score};
+
+% Nodo Optimizer
+\node[box, minimum width=3cm] (opt) at (-4, -9.5) {Optimizer};
+
+% Flechas originales
+\draw[->] (input) -- (layer1);
+\draw[->] (weight1) -- (layer1);
+\draw[->] (layer1) -- (layer2);
+\draw[->] (weight2) -- (layer2);
+\draw[->] (layer2) -- (pred);
+\draw[->] (pred) -- (loss);
+\draw[->] (target) -- (loss);
+\draw[->] (loss) -- (score);
+
+% Flechas de retropropagación (Loss score -> Optimizer -> Weights)
+\draw[->] (score) -- (opt);
+\draw[-] (opt.west) -- ++(-0.8, 0) coordinate (bus);
+\draw[->] (bus) |- (weight2.west);
+\draw[->] (bus) |- (weight1.west);
+
+\end{tikzpicture}
+\end{center}
+
+\subsection{Aplicaciones del Deep Learning}
+
+\subsubsection{Visión por computadora (Computer Vision)}
+
+Aplicaciones cotidianas: Google Photos, búsqueda de imágenes de Google, YouTube, filtros de video en aplicaciones de cámara, software de OCR.
+
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \textbf{Galerías de fotos}: crean carpetas donde se idenfican sujetos específicos.
+  rasgos faciales y agrupan por similitud.
+  \item \textbf{Conducción autónoma}: un Tesla identificó mayor riesgo de atropellar a una persona y decidió chocar contra otro auto.
+  \item \textbf{Agricultura autónoma}: drones con IA para optimizar el riesgo de cultivos.
+  \item \textbf{Diagnóstico médico asistido por IA} y \textbf{sistemas de pago autónomos}.
+\end{itemize}
+
+\subsubsection{Procesamiento de Lenguaje Natural (NLP)}
+
+En el lenguaje natural se contemplan idiomas humanos, ambiguos y cambiantes, como el español o el chino mandarín. Se distinguen de los lenguajes de máquina, estructurados cuidadosamente, como Assembly, Lisp, XML, etc.
+
+\begin{definicion}
+\textbf{Natural Language Processing (NLP)}: uso de aprendizaje automático y grandes conjuntos de datos para procesar fragmentos de lenguaje y devolver algo útil.
+\end{definicion}
+
+Notar que el objetivo \emph{no} es que la computadora ``comprenda'' el lenguaje, sino que, como dice la definición, devuelva algo útil.
+
+\begin{table}[H]
+\centering
+\caption{Tareas comunes en NLP.}
+\label{tab:nlp-tareas}
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Tarea} & \textbf{Pregunta que responde} \\
+\midrule
+Clasificación de texto & ¿Cuál es el tema de este texto? \\
+Filtrado de contenido & ¿Este texto contiene abuso? \\
+Análisis de sentimientos & ¿Este texto suena positivo o negativo? \\
+Modelado del lenguaje & ¿Cuál debería ser la siguiente palabra? \\
+Traducción & ¿Cómo dirías esto en alemán? \\
+Resumen & ¿Cómo resumirías este artículo en un párrafo? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Series temporales}
+\begin{definicion}
+\textbf{LSTM (Long short-term memory)}: algoritmo de memoria a corto y largo plazo, fundamental para el aprendizaje profundo en series temporales. Se desarrolló en 1997 y apenas ha cambiado desde entonces.
+\end{definicion}
+\begin{definicion}
+\textbf{Serie temporal}: dato obtenido mediante mediciones en intervalos de tiempo regulares.
+\end{definicion}
+
+Ejemplos: precio de una acción, consumo eléctrico por hora, ventas semanales, clima, actividad sísmica.
+
+\begin{table}[H]
+\centering
+\caption{Tareas sobre series temporales.}
+\label{tab:series-tareas}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Tarea} & \textbf{Descripción} & \textbf{Ejemplo} \\
+\midrule
+Predicción & Anticipar lo que sucederá a continuación & Pronosticar consumo eléctrico con horas de anticipación \\
+Clasificación & Asignar etiquetas categóricas a una serie & Clasificar si un visitante web es robot o humano \\
+Detección de eventos & Identificar un evento esperado en un flujo continuo de datos & Detectar ``Oye Siri'' en audio \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Deep Learning generativo y GANs}
+
+\begin{definicion}
+\textbf{Deep Learning generativo} (IA generativa): crear nuevos contenidos realistas a partir del aprendizaje de distribuciones de datos.
+\end{definicion}
+\begin{definicion}
+\textbf{LLM (Large Language Model)}: modelo de lenguaje a gran escala; predice cuál es la siguiente palabra en una oración incompleta. Es la base de la IA generativa.
+\end{definicion}
+
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \textbf{GANs} (redes generativas antagónicas): combinan una red generadora y una red  discriminadora en un juego \emph{minimax}, produciendo datos visuales indistinguibles de los reales.
+  \item \textbf{VAEs} (variational autoencoders): generan datos mediante codificación y decodificación probabilística.
+  \item \textbf{Modelos autoregresivos}: generan secuencias paso a paso (ej. Transformers).
+  \item \textbf{ChatGPT}: mezcla LLM como generación de texto y usa mecanismos de autoatención. Los modelos de autoatención dominan la generación de secuencias, sobre todo texto.
+\end{itemize}
+
+\subsection{Ética, sesgo y regulación}
+
+\subsubsection{Sesgos discriminatorios}
+
+Los datos pueden ser falsos, imprecisos o poco representativos; aun así, se extrapolan. Los algoritmos de Machine Learning aprenden con datos históricos, por lo que se corre el riesgo de \emph{perpetuar los prejuicios ya instalados} en los datos del pasado.
+
+\begin{advertencia}
+Los datos de entrenamiento pueden contener sesgos; si no se corrigen, el modelo los reproduce o amplifica.
+\end{advertencia}
+
+\textit{Ejemplo:} Estudios sobre modelos que analizan la rotación de camas UCI en una clínica privada chilena permiten ver sesgos y evaluar si son aplicables a la población general de Chile.
+
+\subsubsection{Privacidad y regulación}
+
+Las organizaciones han creado \textbf{comités de ética} para evitar el uso inadecuado de IA. Un aspecto clave es la explicabilidad: la organización que usa IA debe explicar el porqué de sus resultados.
+
+Eventualmente se crea el \textbf{GDPR} (Reglamento General de Protección de Datos de Europa).
+
+Implicancias:
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item Si un banco niega un préstamo mediante IA, debe explicar por qué.
+  \item Los algoritmos de IA no pueden utilizar datos personales durante su fase de aprendizaje.
+\end{itemize}
+
+En Chile se está promulgando la \textbf{Ley 21.790} para la protección de datos personales, que tiene como base el GDPR europeo.
