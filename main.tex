@@ -1,0 +1,283 @@
+% !TEX program = lualatex
+\documentclass[letterpaper,twoside]{article}
+
+% ==================================================
+%      COMPILAR CON XeLaTeX o LuaLaTeX
+% ==================================================
+\usepackage{changepage}
+\usepackage{float}
+
+% --- Idioma y codificación ---
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+
+% --- Tipografía ---
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{microtype}
+
+% --- Matemáticas ---
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{mathtools}
+
+% --- Márgenes para impresión doble cara ---
+\usepackage[
+  top=2.5cm,
+  bottom=2.5cm,
+  inner=3cm,
+  outer=2.5cm,
+  headheight=14pt,
+  headsep=10pt
+]{geometry}
+
+% --- Corrección de páginas en blanco impares (impresión) ---
+\makeatletter
+\let\origcleardoublepage\cleardoublepage
+\def\cleardoublepage{%
+  \clearpage%
+  \ifodd\c@page\else
+    \hbox{}%
+    \thispagestyle{empty}%
+    \newpage%
+  \fi}
+\makeatother
+
+% --- Colores personalizados ---
+\usepackage{xcolor}
+\definecolor{dlblue}{RGB}{31,73,125}
+\definecolor{dlblueLight}{RGB}{230,239,250}
+\definecolor{dlgreen}{RGB}{22,101,52}
+\definecolor{dlgreenLight}{RGB}{232,246,237}
+\definecolor{dlred}{RGB}{165,29,45}
+\definecolor{dlorange}{RGB}{146,64,14}
+\definecolor{dlorangeLight}{RGB}{255,244,229}
+\definecolor{dlpurple}{RGB}{128,0,128}
+\definecolor{dlcodebg}{RGB}{247,248,250}
+\definecolor{commentgreen}{RGB}{0,128,0}
+\definecolor{keywordblue}{RGB}{0,0,200}
+\definecolor{stringred}{RGB}{163,21,21}
+
+% --- Cajas personalizadas ---
+\usepackage[most]{tcolorbox}
+
+% --- Contadores por sección ---
+\newcounter{definicion}[section]
+\renewcommand{\thedefinicion}{\thesection.\arabic{definicion}}
+
+\newcounter{algoritmo}[section]
+\renewcommand{\thealgoritmo}{\thesection.\arabic{algoritmo}}
+
+\newcounter{advertencia}[section]
+\renewcommand{\theadvertencia}{\thesection.\arabic{advertencia}}
+
+\newcounter{ejercicio}[section]
+\renewcommand{\theejercicio}{\thesection.\arabic{ejercicio}}
+
+% --- Configuración Global de Cajas ---
+\tcbset{
+  box_style/.style={
+    enhanced,
+    colback=white,
+    boxrule=0.6pt,
+    left=6pt, right=6pt, top=6pt, bottom=6pt,
+    sharp corners,
+    before skip=12pt,
+    after skip=12pt,
+    fonttitle=\bfseries,
+    attach title to upper,
+    after title={\par\nobreak\vskip4pt\hrule\vskip6pt\noindent},
+  }
+}
+
+% --- Definición (azul) ---
+\newtcolorbox{definicionBox}[1][]{
+  box_style,
+  colframe=dlblue,
+  coltitle=dlblue,
+  borderline west={2pt}{0pt}{dlblue},
+  title={Definición \thedefinicion: #1},
+}
+\newenvironment{definicion}[1][]{%
+  \refstepcounter{definicion}\begin{definicionBox}[#1]\normalfont}{\end{definicionBox}}
+
+% --- Algoritmo (púrpura) ---
+\newtcolorbox{algoritmoBox}[1][]{
+  box_style,
+  colframe=dlpurple,
+  coltitle=dlpurple,
+  borderline west={2pt}{0pt}{dlpurple},
+  title={Algoritmo \thealgoritmo: #1},
+}
+\newenvironment{algoritmo}[1][]{%
+  \refstepcounter{algoritmo}\begin{algoritmoBox}[#1]\normalfont}{\end{algoritmoBox}}
+
+% --- Advertencia (rojo) ---
+\newtcolorbox{advertenciaBox}[1][]{
+  box_style,
+  colframe=dlred,
+  coltitle=dlred,
+  borderline west={2pt}{0pt}{dlred},
+  title={Advertencia \theadvertencia: #1},
+}
+\newenvironment{advertencia}[1][]{%
+  \refstepcounter{advertencia}\begin{advertenciaBox}[#1]\normalfont}{\end{advertenciaBox}}
+
+% --- Ejercicio (sin borde, solo texto) ---
+\newenvironment{ejercicio}
+  {\par\medskip\noindent\refstepcounter{ejercicio}\textbf{Ejercicio \theejercicio.}}
+  {\par\medskip}
+
+% --- Código fuente ---
+\usepackage{listings}
+
+\lstdefinelanguage{PythonIC}{
+  morekeywords={import,from,as,def,return,if,else,for,while,print,class,None,True,False,in,range,len,float,argmax,reshape},
+  morekeywords=[2]{keras,np,tf,plt,red,imgs,labs,X,Y,h,fig,axs,model},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]",
+}
+
+\lstset{
+  language=PythonIC,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{keywordblue}\bfseries,
+  keywordstyle=[2]\color{dlgreen},
+  commentstyle=\color{commentgreen}\itshape,
+  stringstyle=\color{stringred},
+  backgroundcolor=\color{dlcodebg},
+  frame=single,
+  rulecolor=\color{gray!40},
+  tabsize=2,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakautoindent=false,
+  postbreak=\mbox{\hbox{\color{gray}\tiny$\hookrightarrow$}\space},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  xleftmargin=15pt,
+  framexleftmargin=10pt,
+  captionpos=b,
+}
+
+% --- Diagramas y gráficas ---
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,calc,fit}
+
+% --- Tablas profesionales ---
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% --- Listas personalizadas ---
+\usepackage{enumitem}
+
+% --- Cabeceras y pies de página ---
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% --- Evitar líneas desbordadas en párrafos normales ---
+\emergencystretch=2em
+
+% ==================================================
+%   CABECERAS Y PIES DE PÁGINA
+% ==================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\textit{\leftmark}}
+\fancyhead[RO]{\small\textit{\rightmark}}
+\fancyfoot[LE,RO]{\small\thepage\ de \pageref{LastPage}}
+\fancyfoot[CE,CO]{\small\textit{Deep Learning --- DLY0100}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Sin headers/footers en preface e índice
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\small\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+% Título de las partes y capítulos
+\renewcommand{\partname}{Parte}
+\renewcommand{\thepart}{\Roman{part}}
+
+% ==================================================
+%   HIPERVÍNCULOS Y METADATOS DEL DOCUMENTO
+% ==================================================
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Un Apunte de Deep Learning},
+  pdfauthor={Antonio Jara Sánchez},
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=black,
+  citecolor=black,
+}
+
+% ==================================================
+%   COMIENZO DEL DOCUMENTO
+% ==================================================
+\begin{document}
+
+\thispagestyle{empty}
+
+% --- Portada ---
+\begin{titlepage}
+\begin{center}
+\vspace*{\fill}
+
+% Línea horizontal superior
+\rule{\textwidth}{1pt}
+\vspace{1cm}
+
+{\Large Un Apunte de}
+
+\vspace{0.5cm}
+{\Huge \textbf{Deep Learning}}
+
+\vspace{1cm}
+\rule{\textwidth}{0.8pt}
+
+\vspace{2.5cm}
+
+\Large \textit{Antonio Jara Sánchez}
+
+\vspace{3cm}
+
+\normalsize Versión: \today
+
+\vspace*{\fill}
+\end{center}
+\end{titlepage}
+\cleardoublepage
+
+% --- Prefacio ---
+\pagenumbering{roman}
+\pagestyle{plain}
+\section*{Prefacio}
+\addcontentsline{toc}{section}{Prefacio}
+
+Este apunte, como el intento de presentar los temas del curso de forma progresiva que es, fue realizado para fines de estudio personal de la asignatura \textbf{DLY0100}. Se basa casi en su totalidad en el material del curso (diapositivas), así como notas de clase.
+
+\medskip
+
+Esta es la primera revisión (\textbf{Versión del \today}). Cualquier sugerencia, corrección, observación, etc. puede ser indicado al correo antoniojarasanchez@proton.me
+
+\cleardoublepage
+
+% --- Índice ---
+\tableofcontents
+
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{fancy}
+
+% --- Inicio del contenido ---
+\input{chapters/cap01-introduccion.tex}
+
+\end{document}

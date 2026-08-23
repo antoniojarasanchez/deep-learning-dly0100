@@ -1,0 +1,167 @@
+﻿% ==================================================
+%  CAPÍTULO 1: INTRODUCCIÓN AL DEEP LEARNING
+% ==================================================
+
+\section{Introducción al Deep Learning}
+
+\subsection{Contexto tecnológico: la Sociedad 5.0}
+
+En 2015, Japón acuñó el concepto de \textbf{Sociedad 5.0}, cuya idea central es que \emph{las máquinas serán las principales creadoras del conocimiento humano}, apalancadas en la inteligencia artificial. Mientras la Sociedad 4.0 generó la información digital, la 5.0 la aprovecha con IA para integrar la tecnología en la vida cotidiana.
+
+\subsection{Inteligencia Artificial: definición y evolución}
+
+Se adopta la definición de Nilsson (1998):
+
+\begin{definicion}
+\textbf{Inteligencia Artificial (IA)}: capacidad de imitar comportamientos inteligentes.
+\end{definicion}
+
+La definición de IA ha evolucionado a lo largo del tiempo.
+
+\begin{table}[H]
+\centering
+\caption{Evolución de la definición de Inteligencia Artificial.}
+\label{tab:evolucion-ia}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Definición histórica} & \textbf{Idea central} & \textbf{Problema / observación} \\
+\midrule
+Sistemas que piensan como humanos & Imitar el pensamiento humano & No existe una única forma de pensamiento humano \\
+Sistemas que piensan racionalmente & Pensar de manera correcta & El silogismo carece de contexto \\
+Sistemas que actúan como humanos & Test de Turing & No tuvo éxito en su época por capacidad de procesamiento \\
+Sistemas que actúan racionalmente & Actuar según lo programado & Definición vigente desde 1998 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{definicion}
+\textbf{IA (definición vigente)}: todo sistema capaz de \emph{actuar racionalmente}.
+
+\textbf{Racional}: correcto para lo que fue programado; no implica conciencia.
+\end{definicion}
+
+\subsubsection{Clasificaciones de la Inteligencia Artificial}
+
+\begin{table}[H]
+\centering
+\caption{Clasificación de la IA según capacidad y complejidad.}
+\label{tab:ia-capacidad}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Tipo} & \textbf{Descripción} & \textbf{Ejemplos} \\
+\midrule
+IA reactiva & No aprende de experiencias pasadas; responde a estímulos actuales & Alexa, Siri, aspiradora robot, Deep Blue \\
+IA con memoria limitada & Aprende de datos históricos, pero con memoria limitada y específica & Vehículos autónomos, Waze, Google Maps \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Clasificación de la IA según propósito y aplicaciones.}
+\label{tab:ia-proposito}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Tipo} & \textbf{Descripción} & \textbf{Ejemplos} \\
+\midrule
+IA débil / narrow & Específica para tareas claras; no aprende tareas nuevas & Detector de spam de Gmail, asistentes virtuales, sistemas de recomendación, reconocimiento de voz \\
+IA fuerte & Capaz de aprender cosas nuevas & Autos autónomos, sistemas de Machine Learning \\
+Super IA & Consciente de su existencia; capaz de realizar cualquier tarea humana & No existe todavía \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Machine Learning: el núcleo de la IA}
+
+\begin{definicion}
+\textbf{Machine Learning} (aprendizaje automático): campo de la IA que se encarga de reconocer
+patrones desde los datos y de generalizar conocimiento a partir de la experiencia y de muchos
+datos.
+
+Definición de \textbf{Arthur Samuel}: ``el diseño y desarrollo de algoritmos que permiten a los
+computadores \emph{aprender sin ser explícitamente programados}''.
+\end{definicion}
+
+No existe un comando ``\texttt{.learn}'', el aprendizaje se logra mediante un \textbf{algoritmo}.
+
+\begin{definicion}
+\textbf{Algoritmo}: secuencia lógica, paso a paso, con inicio, decisiones y fin u objetivo.
+\end{definicion}
+
+\begin{table}[H]
+\centering
+\caption{Tipos de aprendizaje automático.}
+\label{tab:tipos-ml}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Tipo} & \textbf{Descripción} & \textbf{Ejemplos} \\
+\midrule
+Supervisado & Aprende con ejemplos etiquetados & Detección de spam, reconocimiento de voz, analíticas de anuncios \\
+No supervisado & Encuentra patrones sin etiquetas previas & Sistemas de recomendación, registros de conductas, detección de anomalías \\
+Semi-supervisado & Mezcla de supervisado y no supervisado & Análisis de voz, detección de fraude, investigaciones médicas \\
+Por refuerzo & Aprende mediante prueba, error y refuerzo & Robótica, videojuegos, gestión de recursos, IoT \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Deep Learning: aprendizaje por capas}
+
+\begin{definicion}
+\textbf{Deep Learning} (aprendizaje profundo): sistema capaz de aprender mediante algoritmos y
+\emph{sin intervención manual} de un usuario.
+\end{definicion}
+
+\begin{definicion}
+\textbf{Representación}: forma en que los datos son transformados y procesados a lo largo de
+las capas para extraer características relevantes de manera automática.
+
+\textbf{Profundidad del modelo}: cantidad de capas sucesivas de representación.
+\end{definicion}
+
+\begin{advertencia}
+``Profundo'' \emph{no} significa comprensión más profunda; significa \emph{muchas capas
+sucesivas de representación}.
+\end{advertencia}
+
+\textbf{¿Por qué despegó después de 2012?}
+
+Las ideas clave de la visión artificial (redes neuronales convolucionales y retropropagación)
+ya se entendían en 1990 y el algoritmo \textbf{LSTM} (memoria a corto y largo plazo) se
+desarrolló en 1997 y apenas ha cambiado. Pero hasta 2010, un computador de un terabyte era muy difícil
+de conseguir.
+
+\textbf{Tres nuevas figuras han impulsado el avance del aprendizaje automático:}
+\begin{enumerate}[topsep=2pt,itemsep=1pt]
+  \item Hardware más potente (GPU, TPU).
+  \item Mayor disponibilidad de datos (big data).
+  \item Avances en los algoritmos (mejores funciones de activación, optimizadores).
+\end{enumerate}
+
+\subsubsection{Machine Learning vs Deep Learning}
+
+\begin{table}[H]
+\centering
+\caption{Comparación entre Machine Learning y Deep Learning.}
+\label{tab:ml-vs-dl}
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+\textbf{Criterio} & \textbf{Machine Learning} & \textbf{Deep Learning} \\
+\midrule
+Extracción de variables & Manual, mediante ingeniería de características & Automática, mediante capas de representación \\
+Datos & Principalmente estructurados & Imágenes, texto, voz y otros no estructurados \\
+Intervención manual & Requiere decirle si aprendió bien o mal & Aprende sin intervención manual \\
+Escalabilidad & Computacionalmente eficiente, pero no se adapta bien a grandes volúmenes & Suele ser más eficaz en problemas complejos y grandes volúmenes \\
+Costo computacional & Menor & Mayor \\
+Interpretabilidad & Mayor & Menor \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{advertencia}
+El Deep Learning es más caro y menos interpretable, pero más eficaz en problemas complejos.
+\end{advertencia}
