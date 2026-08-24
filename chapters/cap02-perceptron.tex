@@ -470,7 +470,7 @@ Es importante notar que al aumentar la cantidad de neuronas por capa y/o el núm
     \item $\vec{U} \in \mathbb{R}^{F_L \times C}$: Matriz de pesos de la capa de salida.
     \item $\vec{c} \in \mathbb{R}^{1 \times C}$: Vector fila de sesgos de la capa de salida.
     \item $g: \mathbb{R} \to \mathbb{R}$: Función de salida (aplicada elemento a elemento), como softmax o identidad.
-    \item $\hat{\vec{y}} \in \mathbb{R}^{n \times C}$: Matriz de salida final de la red (o vector fila $\mathbb{R}^{1 \times C}$ para un solo ejemplo), que contiene las predicciones.
+    \item $\hat{\mathbf{y}} \in \mathbb{R}^{n \times C}$: Matriz de salida final de la red (o vector fila $\mathbb{R}^{1 \times C}$ para un solo ejemplo), que contiene las predicciones.
     \item $C$: Número de neuronas de la capa de salida (número de clases para clasificación, o 1 para regresión).
 \end{itemize}
 \end{multicols}
@@ -490,16 +490,23 @@ La multiplicación $\vec{h}^{(i-1)} \, \vec{W}^{(i)}$ es una operación matricia
 
 \textbf{Sobre la notación:} Acá los vectores se representan como \textbf{filas} y las matrices de pesos se multiplican por la derecha ($\vec{h} \, \vec{W}$). Esto difiere de la notación de vectores columna utilizada en el perceptrón simple ($\vec{w}^\top \vec{x}$), pero ambas son matemáticamente equivalentes.
 
-\subsubsection{Fórmula de la capa de salida}
+\paragraph{Fórmula de la capa de salida}
 
 La salida de la red se calcula como:
 
 \begin{equation}
 \label{eq:capa-salida}
-\hat{\vec{y}} = g\!\left( \vec{h}^{(L)} \, \vec{U} + \vec{c} \right),
+\hat{\mathbf{y}} = g\!\left( \vec{h}^{(L)} \, \vec{U} + \vec{c} \right),
 \end{equation}
 
-donde $L$ es el número total de capas ocultas, y $\hat{\vec{y}}$ es la salida final de la red.
+donde $L$ es el número total de capas ocultas, y $\hat{\mathbf{y}}$ es la salida final de la red.
+
+
+\paragraph{Aspectos técnicos de las operaciones matriciales}
+
+En la práctica, para aprovechar el hardware moderno (GPUs, TPUs), los datos se procesan en \textbf{lotes} (\emph{batches}) en lugar de ejemplo por ejemplo. Esto significa que $\vec{X}$ ya no es un vector de tamaño $(F, 1)$, sino una \textbf{matriz de tamaño $(n, F)$}, donde $n$ es el tamaño del lote (\emph{batch size}) y $F$ es el número de características de entrada. De manera análoga, la salida $\hat{\mathbf{y}}$ es una matriz de tamaño $(n, C)$.
+
+Las librerías modernas como TensorFlow y PyTorch están altamente optimizadas para operaciones matriciales en GPU, lo que acelera drásticamente los cálculos.
 
 \subsection{Función de salida: Softmax}
 
@@ -526,3 +533,61 @@ Esto permite interpretar la salida como una distribución de probabilidad sobre 
 \begin{advertencia}
 Es importante no confundir la \textbf{función de activación} (usada en capas ocultas, generalmente ReLU) con la \textbf{función de salida} (usada en la capa de salida, como softmax o identidad). Incluso una función como sigmoide, que no se recomienda como activación en capas ocultas, puede utilizarse como función de salida para problemas de clasificación binaria.
 \end{advertencia}
+
+\subsection{Entrenamiento de la red neuronal}
+
+\begin{definicion}
+\textbf{Entrenamiento}: el proceso mediante el cual la red encuentra los valores óptimos para todos sus parámetros (pesos y sesgos) de modo que resuelva el problema de forma satisfactoria.
+\end{definicion}
+
+Para entrenar, se inicializan los pesos con valores aleatorios pequeños (centrados en cero) y se itera entre la primera capa oculta y la capa de salida (el \textbf{forward pass}), ajustando los parámetros mediante retropropagación.
+
+\paragraph{Datos y etiquetas}
+
+Para entrenar una red se necesitan:
+
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item $\vec{y}$ (sin sombrero): la \textbf{etiqueta} correcta para cada dato de entrada (el valor esperado).
+  \item $\hat{\mathbf{y}}$ (con sombrero): la \textbf{predicción} que calcula la red durante el entrenamiento.
+\end{itemize}
+
+El objetivo es que $\hat{\mathbf{y}} \approx \vec{y}$.
+
+\subsubsection{Función de error y pérdida (loss)}
+
+Para cuantificar el error, se define una \textbf{función de pérdida} que mide la discrepancia entre la salida esperada $\vec{y}$ y la predicción $\hat{\mathbf{y}}$.
+
+\begin{definicion}
+\textbf{Función de pérdida} (\emph{loss function}): función que mide la diferencia entre la salida esperada $\vec{y}$ y la salida calculada $\hat{\mathbf{y}}$, devolviendo un escalar que indica qué tan mal se está desempeñando el modelo en un ejemplo o en un lote.
+\end{definicion}
+
+Para un conjunto de $n$ ejemplos, la pérdida promedio es:
+
+\begin{equation}
+\label{eq:loss}
+\mathcal{L} = \frac{1}{n} \sum_{i=1}^{n} \ell\!\left( \hat{\mathbf{y}}^{(i)},\, \vec{y}^{(i)} \right),
+\end{equation}
+
+donde $\ell$ es la función de error para un solo ejemplo (por ejemplo, error cuadrático medio o entropía cruzada).
+
+\paragraph{Dependencia de los parámetros}
+
+La función de pérdida depende de \emph{todos} los parámetros de la red:
+
+\begin{equation}
+\label{eq:theta}
+\Theta = \left\{ \vec{W}^{(i)}, \vec{b}^{(i)}, \vec{U}, \vec{c} \right\}_{i=1}^{L}
+\end{equation}
+
+El objetivo del entrenamiento es encontrar el conjunto de parámetros $\Theta$ que \textbf{minimiza} la función de pérdida:
+
+Este problema de minimización se resuelve mediante el algoritmo de \textbf{descenso del gradiente} y su variante \emph{backpropagation}, que calcula los gradientes de la pérdida con respecto a cada parámetro.
+
+\paragraph{Interpretación de la pérdida y exactitud}
+
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item La \textbf{pérdida} debe ser \emph{cercana a 0}, pero no exactamente 0.
+  \item Si la pérdida es exactamente 0, el modelo probablemente \emph{memorizó} el conjunto de entrenamiento y no generalizará bien a datos nuevos (\textbf{sobreajuste}).
+  \item La \textbf{exactitud} (\emph{accuracy}) es el porcentaje de predicciones correctas sobre el total de ejemplos.
+  \item Idealmente, la exactitud debe ser alta (por ejemplo, superior a 95\%), pero inferior a 100\% para asegurar generalización.
+\end{itemize}
