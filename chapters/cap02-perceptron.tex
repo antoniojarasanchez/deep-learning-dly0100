@@ -2,9 +2,9 @@
 %  CAPÍTULO 2: EL PERCEPTRÓN Y REDES FULLY CONNECTED
 % ==================================================
 \cleardoublepage
-\section{El Perceptrón y Redes Fully Connected Feed Forward}
+\chapter{El Perceptrón y Redes Fully Connected Feed Forward}
 
-\subsection{De la IA a las redes neuronales}
+\section{De la IA a las redes neuronales}
 
 Una red se puede pensar como una malla de nodos entrelazados con diferentes uniones. En Deep Learning programamos un sistema que en cada capa decide hacia qué nodo avanzar según una probabilidad dada por un algoritmo.
 
@@ -31,7 +31,7 @@ Deep Learning & Entrada $\to$ red neuronal $\to$ salida, sin intervención manua
 A diferencia de los modelos tradicionales de Machine Learning (cuyo rendimiento se satura rápidamente al aumentar los datos), los modelos de Deep Learning escalan a medida que se incrementan la cantidad de datos, el número de capas y la capacidad computacional.
 La idea es que se \emph{podría} resolver prácticamente cualquier problema, dados una cantidad de datos y capacidad de cómputo suficientes, siendo estos mismos el factor limitante.
 
-\subsection{El perceptrón}
+\section{El perceptrón}
 
 El \textbf{perceptrón} se inspira en el funcionamiento de la red neuronal biológica del cerebro humano. En este, cada neurona recibe impulsos eléctricos de neuronas vecinas. Cuando la cantidad total de las señales entrantes supera cierto \textbf{umbral}, la neurona ``dispara'' su propia señal, la cual se conecta con otras neuronas.
 
@@ -44,7 +44,7 @@ La unión o punto de contacto entre dos neuronas se llama \textbf{sinapsis}. Cua
 al computador.
 \end{definicion}
 
-\subsubsection{Operación del perceptrón}
+\subsection{Operación del perceptrón}
 
 \paragraph{Intuición}
 El perceptrón es la unidad básica de una red neuronal. Recibe un conjunto de $m$ señales de entradas binarias $x_i$ (por ejemplo, píxeles encendidos o apagados), cada una con un cierto nivel de \textbf{importancia} (los pesos $w_i$), y un \textbf{umbral de activación} ajustable (el sesgo o bias $b$). 

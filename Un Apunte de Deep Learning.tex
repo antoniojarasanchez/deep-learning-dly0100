@@ -1,5 +1,5 @@
 % !TEX program = lualatex
-\documentclass[12pt,letterpaper,twoside]{article}
+\documentclass[letterpaper,twoside]{book}
 
 % ==================================================
 %      COMPILAR CON XeLaTeX o LuaLaTeX
@@ -60,18 +60,18 @@
 % --- Cajas personalizadas ---
 \usepackage[most]{tcolorbox}
 
-% --- Contadores por sección ---
-\newcounter{definicion}[section]
-\renewcommand{\thedefinicion}{\thesection.\arabic{definicion}}
+% --- Contadores por capítulo ---
+\newcounter{definicion}[chapter]
+\renewcommand{\thedefinicion}{\thechapter.\arabic{definicion}}
 
-\newcounter{algoritmo}[section]
-\renewcommand{\thealgoritmo}{\thesection.\arabic{algoritmo}}
+\newcounter{algoritmo}[chapter]
+\renewcommand{\thealgoritmo}{\thechapter.\arabic{algoritmo}}
 
-\newcounter{advertencia}[section]
-\renewcommand{\theadvertencia}{\thesection.\arabic{advertencia}}
+\newcounter{advertencia}[chapter]
+\renewcommand{\theadvertencia}{\thechapter.\arabic{advertencia}}
 
-\newcounter{ejercicio}[section]
-\renewcommand{\theejercicio}{\thesection.\arabic{ejercicio}}
+\newcounter{ejercicio}[chapter]
+\renewcommand{\theejercicio}{\thechapter.\arabic{ejercicio}}
 
 % --- Configuración Global de Cajas ---
 \tcbset{
@@ -258,8 +258,8 @@
 % --- Prefacio ---
 \pagenumbering{roman}
 \pagestyle{plain}
-\section*{Prefacio}
-\addcontentsline{toc}{section}{Prefacio}
+\chapter*{Prefacio}
+\addcontentsline{toc}{chapter}{Prefacio}
 
 Este apunte, como el intento de presentar los temas del curso de forma progresiva que es, fue realizado para fines de estudio personal de la asignatura \textbf{DLY0100}. Se basa casi en su totalidad en el material del curso (diapositivas), así como notas de clase.
 

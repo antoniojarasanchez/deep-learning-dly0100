@@ -2,13 +2,13 @@
 %  CAPÍTULO 1: INTRODUCCIÓN AL DEEP LEARNING
 % ==================================================
 
-\section{Introducción al Deep Learning}
+\chapter{Introducción al Deep Learning}
 
-\subsection{Contexto tecnológico: la Sociedad 5.0}
+\section{Contexto tecnológico: la Sociedad 5.0}
 
 En 2015, Japón acuñó el concepto de \textbf{Sociedad 5.0}, cuya idea central es que \emph{las máquinas serán las principales creadoras del conocimiento humano}, apalancadas en la inteligencia artificial. Mientras la Sociedad 4.0 generó la información digital, la 5.0 la aprovecha con IA para integrar la tecnología en la vida cotidiana.
 
-\subsection{Inteligencia Artificial: definición y evolución}
+\section{Inteligencia Artificial: definición y evolución}
 
 Se adopta la definición de Nilsson (1998):
 
@@ -41,7 +41,7 @@ Sistemas que actúan racionalmente & Actuar según lo programado & Definición v
 \textbf{Racional}: correcto para lo que fue programado; no implica conciencia.
 \end{definicion}
 
-\subsubsection{Clasificaciones de la Inteligencia Artificial}
+\subsection{Clasificaciones de la Inteligencia Artificial}
 
 \begin{table}[H]
 \centering
@@ -74,7 +74,7 @@ Super IA & Consciente de su existencia; capaz de realizar cualquier tarea humana
 \end{tabularx}
 \end{table}
 
-\subsection{Machine Learning: el núcleo de la IA}
+\section{Machine Learning: el núcleo de la IA}
 
 \begin{definicion}
 \textbf{Machine Learning} (aprendizaje automático): campo de la IA que se encarga de reconocer patrones desde los datos y de generalizar conocimiento a partir de la experiencia y de muchos datos.
@@ -105,7 +105,7 @@ Por refuerzo & Aprende mediante prueba, error y refuerzo & Robótica, videojuego
 \end{tabularx}
 \end{table}
 
-\subsection{Deep Learning: aprendizaje por capas}
+\section{Deep Learning: aprendizaje por capas}
 
 \begin{definicion}
 \textbf{Deep Learning} (aprendizaje profundo): sistema capaz de aprender mediante algoritmos y \emph{sin intervención manual} de un usuario.
@@ -132,7 +132,7 @@ Las ideas clave de la visión artificial (redes neuronales convolucionales y ret
   \item Avances en los algoritmos (mejores funciones de activación, optimizadores).
 \end{enumerate}
 
-\subsubsection{Machine Learning vs Deep Learning}
+\subsection{Machine Learning vs Deep Learning}
 
 \begin{table}[H]
 \centering
@@ -157,7 +157,7 @@ Interpretabilidad & Mayor & Menor \\
 El Deep Learning es más caro y menos interpretable, pero más eficaz en problemas complejos.
 \end{advertencia}
 
-\subsubsection{Cómo trabaja Deep Learning}
+\subsection{Cómo trabaja Deep Learning}
 La formalidad y rigurosidad matemática detrás de los algoritmos de DL se verán más adelante. Por ahora, una explicación intuitiva:
 
 El aprendizaje automático consiste en mapear \emph{entradas} (como imágenes) a \emph{objetivos} (como la etiqueta ``gato''), procesando muchos ejemplos de entradas-objetivos. En Deep Learning, este mapeo se realiza a través de una secuencia de \emph{transformaciones de datos simples}, que se aprenden mediante el procesamiento de muchos (realmente muchos) ejemplos.
@@ -212,9 +212,9 @@ El aprendizaje automático consiste en mapear \emph{entradas} (como imágenes) a
 \end{tikzpicture}
 \end{center}
 
-\subsection{Aplicaciones del Deep Learning}
+\section{Aplicaciones del Deep Learning}
 
-\subsubsection{Visión por computadora (Computer Vision)}
+\subsection{Visión por computadora (Computer Vision)}
 
 Aplicaciones cotidianas: Google Photos, búsqueda de imágenes de Google, YouTube, filtros de video en aplicaciones de cámara, software de OCR.
 
@@ -225,7 +225,7 @@ Aplicaciones cotidianas: Google Photos, búsqueda de imágenes de Google, YouTub
   \item \textbf{Diagnóstico médico asistido por IA} y \textbf{sistemas de pago autónomos}.
 \end{itemize}
 
-\subsubsection{Procesamiento de Lenguaje Natural (NLP)}
+\subsection{Procesamiento de Lenguaje Natural (NLP)}
 
 En el lenguaje natural se contemplan idiomas humanos, ambiguos y cambiantes, como el español o el chino mandarín. Se distinguen de los lenguajes de máquina, estructurados cuidadosamente, como Assembly, Lisp, XML, etc.
 
@@ -254,7 +254,7 @@ Resumen & ¿Cómo resumirías este artículo en un párrafo? \\
 \end{tabularx}
 \end{table}
 
-\subsubsection{Series temporales}
+\subsection{Series temporales}
 \begin{definicion}
 \textbf{LSTM (Long short-term memory)}: algoritmo de memoria a corto y largo plazo, fundamental para el aprendizaje profundo en series temporales. Se desarrolló en 1997 y apenas ha cambiado desde entonces.
 \end{definicion}
@@ -280,7 +280,7 @@ Detección de eventos & Identificar un evento esperado en un flujo continuo de d
 \end{tabularx}
 \end{table}
 
-\subsubsection{Deep Learning generativo y GANs}
+\subsection{Deep Learning generativo y GANs}
 
 \begin{definicion}
 \textbf{Deep Learning generativo} (IA generativa): crear nuevos contenidos realistas a partir del aprendizaje de distribuciones de datos.
@@ -296,9 +296,9 @@ Detección de eventos & Identificar un evento esperado en un flujo continuo de d
   \item \textbf{ChatGPT}: mezcla LLM como generación de texto y usa mecanismos de autoatención. Los modelos de autoatención dominan la generación de secuencias, sobre todo texto.
 \end{itemize}
 
-\subsection{Ética, sesgo y regulación}
+\section{Ética, sesgo y regulación}
 
-\subsubsection{Sesgos discriminatorios}
+\subsection{Sesgos discriminatorios}
 
 Los datos pueden ser falsos, imprecisos o poco representativos; aun así, se extrapolan. Los algoritmos de Machine Learning aprenden con datos históricos, por lo que se corre el riesgo de \emph{perpetuar los prejuicios ya instalados} en los datos del pasado.
 
@@ -308,7 +308,7 @@ Los datos de entrenamiento pueden contener sesgos; si no se corrigen, el modelo 
 
 \textit{Ejemplo:} Estudios sobre modelos que analizan la rotación de camas UCI en una clínica privada chilena permiten ver sesgos y evaluar si son aplicables a la población general de Chile.
 
-\subsubsection{Privacidad y regulación}
+\subsection{Privacidad y regulación}
 
 Las organizaciones han creado \textbf{comités de ética} para evitar el uso inadecuado de IA. Un aspecto clave es la explicabilidad: la organización que usa IA debe explicar el porqué de sus resultados.
 
