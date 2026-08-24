@@ -187,7 +187,7 @@ u(\vec{x}, \vec{w}, b) = \vec{w}^\top \vec{x} + b = \sum_{i=1}^{m} w_i x_i + b =
 \[
 u = \sum_{i=0}^{m} w_i x_i = w_0 \cdot 1 + w_1 x_1 + \cdots + w_m x_m = b + w_1 x_1 + \cdots + w_m x_m.
 \]
-Su utilidad es principalmente \textbf{algebraica}: permite expresar el perceptrón como un único producto punto $\mathbf{w}^\top \mathbf{x}$, simplificando derivadas, reglas de aprendizaje y demostraciones teóricas. Ambas representaciones son matemáticamente equivalentes y su elección es contextual.
+Su utilidad es principalmente \textbf{algebraica}: permite expresar el perceptrón como un único producto punto $\vec{w}^\top \vec{x}$, simplificando derivadas, reglas de aprendizaje y demostraciones teóricas. Ambas representaciones son matemáticamente equivalentes y su elección es contextual.
 
 \paragraph{Paso 2: Función de activación}
 El valor resultante $u$ (que es un número real) se transforma en una salida binaria, que es $1$ si $u \geq 0$, y $0$ si $u < 0$. Esto se logra mediante la función de activación escalón unitario, la cual introduce la no linealidad y toma la decisión final de activación:
@@ -226,6 +226,10 @@ La Figura~\ref{fig:escalon} muestra su forma: para cualquier valor negativo de $
 \label{fig:escalon}
 \end{figure}
 
+\begin{advertencia}
+  Notar que más adelante, la función escalón se vuelve obsoleta, y eventualmente es reemplazada por la función ReLU.
+\end{advertencia}
+
 \paragraph{Paso 3: Salida final del perceptrón}
 Finalmente, la salida del modelo es la composición de la combinación lineal afín (suma ponderada) y la función de activación:
 \begin{equation}
@@ -235,3 +239,214 @@ Finalmente, la salida del modelo es la composición de la combinación lineal af
 \end{equation}
 
 En resumen, el perceptrón transforma un vector de entradas binarias $\vec{x}$ en una salida binaria $\hat{y}$ mediante una suma ponderada ajustada por un sesgo y una decisión de umbral. Los parámetros del modelo, $\vec{w}$ y $b$, son los que se ajustan durante el entrenamiento para que la salida $\hat{y}$ se aproxime al valor deseado para cada ejemplo de entrada.
+\subsection{Funciones de activación}
+
+\begin{definicion}
+\textbf{Función de activación}: función no lineal que transforma la entrada neta $u$ de una neurona en una señal de salida. Biológicamente, intenta emular el comportamiento de una neurona real: cuando la acumulación de estimulación supera un cierto umbral, la neurona ``dispara'' información hacia la siguiente neurona.
+\end{definicion}
+
+\begin{advertencia}
+En las funciones de activación \emph{siempre} se deben utilizar funciones \textbf{no lineales}. Si se usaran funciones lineales, la composición de múltiples capas sería equivalente a una única transformación lineal, anulando la capacidad de la red para aprender patrones complejos.
+\end{advertencia}
+
+A continuación se estudian las cuatro funciones de activación más relevantes: la función escalón (histórica), la sigmoide, la tangente hiperbólica (tanh) y ReLU.
+
+\subsubsection{Función escalón (step)}
+
+Originalmente, Rosenblatt utilizó la función escalón en su perceptrón:
+
+\begin{equation}
+\label{eq:step}
+\phi(u) = 
+\begin{cases}
+0 & \text{si } u < 0, \\
+1 & \text{si } u \geq 0.
+\end{cases}
+\end{equation}
+
+\begin{advertencia}
+Esta función \emph{no es utilizable} en el entrenamiento moderno. Para entrenar una red neuronal necesitamos calcular derivadas (gradientes) mediante retropropagación, y la derivada de esta función es $0$ en todos los puntos donde está definida (es una función constante por tramos). Esto impide que los pesos se actualicen.
+\end{advertencia}
+
+\subsubsection{Función sigmoide}
+
+La función que resolvió el problema de la derivabilidad es la \textbf{sigmoide logística}:
+
+\begin{equation}
+\label{eq:sigmoide}
+\sigma(u) = \frac{1}{1 + e^{-u}}.
+\end{equation}
+
+Es derivable en todo $\mathbb{R}$ y su rango es $(0, 1)$, lo que la hace adecuada para interpretar salidas como probabilidades. Emula razonablemente bien el comportamiento de una neurona biológica.
+
+\begin{advertencia}
+Su principal desventaja es la \textbf{saturación en los extremos}: para valores de $u$ muy grandes o muy pequeños, la pendiente (gradiente) es prácticamente $0$, lo que provoca que los gradientes desaparezcan durante la retropropagación y la red deje de aprender.
+\end{advertencia}
+
+\subsubsection{Función tangente hiperbólica (tanh)}
+
+\begin{equation}
+\label{eq:tanh}
+\tanh(u) = \frac{e^{u} - e^{-u}}{e^{u} + e^{-u}}.
+\end{equation}
+
+Su rango es $(-1, 1)$, por lo que está centrada en cero, lo que facilita el entrenamiento. Funciona mejor que la sigmoide en la práctica.
+
+\begin{advertencia}
+Presenta el mismo problema de saturación en los extremos: el gradiente se vuelve muy pequeño para valores grandes de $|u|$, lo que puede ralentizar o detener el aprendizaje.
+\end{advertencia}
+
+\subsubsection{Función ReLU (Rectified Linear Unit)}
+
+\begin{equation}
+\label{eq:relu}
+\text{ReLU}(u) = 
+\begin{cases}
+0 & \text{si } u < 0, \\
+u & \text{si } u \geq 0.
+\end{cases}
+\end{equation}
+
+Es la función de activación más utilizada en la práctica actual. Para valores positivos, el gradiente es $1$ y \emph{nunca desaparece}, lo que acelera el entrenamiento significativamente.
+
+\begin{advertencia}
+\textbf{Regla de uso}: ReLU se utiliza en las \emph{capas ocultas} (intermedias). \emph{No se usa en la capa de salida} para clasificación; en su lugar se emplea softmax. Tampoco se recomienda usar ReLU cuando los datos de entrada pueden tomar valores negativos muy grandes, ya que las neuronas pueden ``morir'' (quedar atascadas en $0$).
+\end{advertencia}
+
+\subsubsection{Comparación de funciones de activación}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de las funciones de activación.}
+\label{tab:activaciones}
+\small
+\begin{tabularx}{\textwidth}{@{}lXXX@{}}
+\toprule
+\textbf{Función} & \textbf{Rango} & \textbf{Ventajas} & \textbf{Desventajas} \\
+\midrule
+Escalón & $\{0,1\}$ & Histórica, simple & No derivable, gradiente cero \\
+Sigmoide & $(0,1)$ & Derivable, interpretable & Saturación en extremos \\
+Tanh & $(-1,1)$ & Centrada en cero & Saturación en extremos \\
+ReLU & $[0,\infty)$ & No satura para positivos, rápida & Neuronas ``muertas'' para negativos \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Lo importante es comprender \textbf{los rangos en que se mueve cada función} y \textbf{la forma de su curva} para estimar los efectos que producen en la red, más que memorizar las fórmulas.
+
+\subsection{Multi-perceptrón y arquitectura Fully Connected}
+
+\subsubsection{Limitación del perceptrón simple}
+
+\begin{advertencia}
+El perceptrón simple (una sola neurona) solo puede aprender \textbf{funciones linealmente separables}, es decir, problemas donde los datos se pueden dividir por una línea recta. Para problemas más complejos, necesitamos redes con múltiples neuronas organizadas en capas: el \textbf{multi-perceptrón} o \emph{red neuronal multicapa}.
+\end{advertencia}
+
+La realidad requiere extender el perceptrón a más dimensiones. En una red multicapa, el vector de entrada ya no se conecta a una única neurona, sino a \emph{muchas neuronas} en paralelo. Esto da lugar a una \textbf{matriz de pesos} (no un solo vector de pesos).
+
+\subsubsection{Estructura de una red neuronal}
+
+Toda red neuronal (multicapa) cuenta con:
+
+\begin{enumerate}[topsep=2pt,itemsep=1pt]
+  \item \textbf{Capa de entrada}: contiene los datos de entrada. No es una capa en el sentido estricto, ya que no realiza ninguna transformación; simplemente distribuye los datos a la siguiente capa.
+  \item \textbf{Capas ocultas (escondidas)}: son las capas intermedias donde ocurren las transformaciones no lineales de los datos. La red aprende representaciones cada vez más abstractas a medida que avanzan las capas.
+  \item \textbf{Capa de salida}: entrega el resultado final de la red. Para problemas de clasificación, suele ser un vector de probabilidades (usando softmax); para regresión, un escalar o vector de valores continuos.
+\end{enumerate}
+
+\begin{definicion}
+\textbf{Red neuronal profunda (\textit{deep neural network})}: una red neuronal que tiene \emph{más de una capa oculta}. Cuantas más capas tiene, más profunda se considera.
+
+\textbf{Fully Connected (\textit{completamente conectada})}: una arquitectura donde todas las neuronas de una capa están conectadas con todas las neuronas de la siguiente capa.
+
+\textbf{Feed Forward (\textit{hacia adelante})}: la información fluye siempre en una dirección, desde la entrada hasta la salida, sin ciclos ni retroalimentación.
+\end{definicion}
+
+Es importante notar que al aumentar la cantidad de neuronas por capa y/o el número de capas de la red, aumentamos drásticamente la cantidad de \textbf{parámetros} (pesos y sesgos), lo que incrementa el tiempo de entrenamiento y la demanda de memoria. En la práctica, se suelen usar potencias de 2 (64, 128, 256, etc.) para el número de neuronas por capa.
+\subsection{Notación matemática de las redes Feed Forward}
+
+La siguiente tabla resume la notación estándar utilizada en redes completamente conectadas:
+
+\begin{table}[H]
+\centering
+\caption{Notación matemática de las redes Fully Connected.}
+\label{tab:notacion}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Símbolo} & \textbf{Descripción} \\
+\midrule
+$\vec{X}$ & Vector (o matriz) de entrada, capa de entrada \\
+$\vec{W}^{(i)}$ & Matriz de pesos de la capa oculta $i$ \\
+$\vec{b}^{(i)}$ & Vector de sesgos de la capa oculta $i$ \\
+$f^{(i)}$ & Función de activación de la capa oculta $i$ \\
+$\vec{h}^{(i)}$ & Vector de salida de la capa oculta $i$ \\
+$L$ & Número total de capas ocultas \\
+$\vec{U}$ & Matriz de pesos de la capa de salida \\
+$\vec{c}$ & Vector de sesgos de la capa de salida \\
+$g$ & Función de salida (ej. softmax, identidad) \\
+$F$ & Tamaño (número de neuronas) de la capa de entrada \\
+$C$ & Tamaño (número de neuronas) de la capa de salida \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+BTW: Por aquí, en algún lugar, pondré un diagrama de la arquitectura multicapa. Ahora mismo tengo sueño :p, tarea para mañana. Recordatorio, también para mañana: Mejorar jerarquización de secciones y subsecciones.
+
+\subsubsection{Fórmula de la capa oculta}
+
+La salida de la capa oculta $i$ se calcula como:
+
+\begin{equation}
+\label{eq:capa-oculta}
+\vec{h}^{(i)} = f^{(i)}\!\left( \vec{h}^{(i-1)} \, \vec{W}^{(i)} + \vec{b}^{(i)} \right),
+\end{equation}
+
+donde asumimos que $\vec{h}^{(0)} = \vec{X}$, es decir, la entrada es la capa $0$.
+
+La multiplicación $\vec{h}^{(i-1)} \, \vec{W}^{(i)}$ es una operación matricial donde cada fila de $\vec{h}^{(i-1)}$ se multiplica por la matriz de pesos. El resultado se suma al vector de sesgos $\vec{b}^{(i)}$, y luego se aplica la función de activación $f^{(i)}$ elemento a elemento.
+
+\textbf{Convención de notación utilizada:} En esta fórmula, $\vec{h}^{(i-1)}$ es un vector \textbf{fila} (o una matriz donde cada fila es un ejemplo) y $\vec{W}^{(i)}$ es una matriz de pesos de tamaño $(F_{i-1}, F_i)$, donde $F_{i-1}$ es el número de neuronas de la capa anterior y $F_i$ el de la capa actual.
+
+Si se utilizara la convención clásica de vectores columna (como en la sección del perceptrón simple), la fórmula sería:
+\[
+\vec{h}^{(i)} = f^{(i)}\!\left( \vec{W}^{(i)T} \, \vec{h}^{(i-1)} + \vec{b}^{(i)} \right),
+\]
+con $\vec{h}^{(i-1)}$ como vector columna. Ambas representaciones son matemáticamente equivalentes.
+
+\subsubsection{Fórmula de la capa de salida}
+
+La salida de la red se calcula como:
+
+\begin{equation}
+\label{eq:capa-salida}
+\hat{\vec{y}} = g\!\left( \vec{h}^{(L)} \, \vec{U} + \vec{c} \right),
+\end{equation}
+
+donde $L$ es el número total de capas ocultas, y $\hat{\vec{y}}$ es la salida final de la red.
+
+\subsection{Función de salida: Softmax}
+
+Para problemas de clasificación multiclase, se utiliza la función \textbf{softmax} en la capa de salida.
+
+\begin{definicion}
+\textbf{Softmax}: función de salida que transforma un vector de valores reales en una \emph{distribución de probabilidades} sobre las clases. Para la componente $j$ del vector de salida:
+\begin{equation}
+\label{eq:softmax}
+s_j = \frac{e^{z_j}}{\sum_{k=1}^{C} e^{z_k}},
+\end{equation}
+donde $C$ es el número de clases y $z_j$ es el valor de la neurona $j$ antes de aplicar softmax.
+\end{definicion}
+
+La función softmax asegura que:
+\begin{enumerate}
+  \item Cada $s_j$ esté en el intervalo $(0, 1)$.
+  \item La suma de todos los $s_j$ sea $1$: $\sum_{j=1}^{C} s_j = 1$.
+\end{enumerate}
+Esto permite interpretar la salida como una distribución de probabilidad sobre las clases.
+
+\emph{Ejemplo: Clasificación de estados de ánimo} (4 clases): pena, alegría, depresión, ansiedad. La salida de la red es un vector de cuatro neuronas. Si softmax asigna $0.90$ a la clase ``alegría'', significa que el modelo predice con un $90\%$ de probabilidad que el estado de ánimo es alegría.
+
+\begin{advertencia}
+Es importante no confundir la \textbf{función de activación} (usada en capas ocultas, generalmente ReLU) con la \textbf{función de salida} (usada en la capa de salida, como softmax o identidad). Incluso una función como sigmoide, que no se recomienda como activación en capas ocultas, puede utilizarse como función de salida para problemas de clasificación binaria.
+\end{advertencia}
