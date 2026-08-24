@@ -1,0 +1,45 @@
+﻿% ==================================================
+%  CAPÍTULO 2: EL PERCEPTRÓN Y REDES FULLY CONNECTED
+% ==================================================
+\cleardoublepage
+\section{El Perceptrón y Redes Fully Connected Feed Forward}
+
+\subsection{De la IA a las redes neuronales}
+
+Una red se puede pensar como una malla de nodos entrelazados con diferentes uniones. En Deep Learning programamos un sistema que en cada capa decide hacia qué nodo avanzar según una probabilidad dada por un algoritmo.
+
+En \textbf{\emph{Representation Learning}} (aprendizaje de representaciones) se construyen representaciones de las entradas o inputs en etapas sucesivas. En cada etapa, la representación o abstracción de la anterior contiene información más compacta y relevante, pero en menor cantidad. Eventualmente, con esta abstracción sucesiva se crea un tensor.Porque transforman la entrada inicial hasta generar un tensor o vector final que contiene todo lo necesario para tomar una decisión, estos algoritmos son llamados \textbf{\emph{End-to-End}}.
+
+La diferencia fundamental entre Machine Learning y Deep Learning radica en la \emph{extracción de características}:
+
+\begin{table}[H]
+\centering
+\caption{Extracción de características: ML vs DL.}
+\label{tab:representacion}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Enfoque} & \textbf{Proceso} \\
+\midrule
+Machine Learning & Extracción manual de características $\to$ clasificador $\to$ salida \\
+Deep Learning & Entrada $\to$ red neuronal $\to$ salida, sin intervención manual \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Rendimiento, datos y costo computacional:}
+A diferencia de los modelos tradicionales de Machine Learning (cuyo rendimiento se satura rápidamente al aumentar los datos), los modelos de Deep Learning escalan a medida que se incrementan la cantidad de datos, el número de capas y la capacidad computacional.
+La idea es que se \emph{podría} resolver prácticamente cualquier problema, dados una cantidad de datos y capacidad de cómputo suficientes, siendo estos mismos el factor limitante.
+
+\subsection{El perceptrón}
+
+El \textbf{perceptrón} se inspira en el funcionamiento de la red neuronal biológica del cerebro humano. En este, cada neurona recibe impulsos eléctricos de neuronas vecinas. Cuando la cantidad total de las señales entrantes supera cierto \textbf{umbral}, la neurona ``dispara'' su propia señal, la cual se conecta con otras neuronas.
+
+La unión o punto de contacto entre dos neuronas se llama \textbf{sinapsis}. Cuando aprendemos nuevas asociaciones entre dos conceptos, la \textbf{fuerza sináptica} entre las neuronas que representan dichos conceptos se fortalece.
+
+\textbf{Regla de Hebb (1949)}: ``Las células que se \textbf{activan juntas}, se conectan entre sí''.
+
+\begin{definicion}
+\textbf{Perceptrón (Rosenblatt, 1957)}: modelo simplificado de una neurona biológica llevado
+al computador.
+\end{definicion}
