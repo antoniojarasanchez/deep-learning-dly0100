@@ -43,3 +43,195 @@ La unión o punto de contacto entre dos neuronas se llama \textbf{sinapsis}. Cua
 \textbf{Perceptrón (Rosenblatt, 1957)}: modelo simplificado de una neurona biológica llevado
 al computador.
 \end{definicion}
+
+\subsubsection{Operación del perceptrón}
+
+\paragraph{Intuición}
+El perceptrón es la unidad básica de una red neuronal. Recibe un conjunto de $m$ señales de entradas binarias $x_i$ (por ejemplo, píxeles encendidos o apagados), cada una con un cierto nivel de \textbf{importancia} (los pesos $w_i$), y un \textbf{umbral de activación} ajustable (el sesgo o bias $b$). 
+El perceptrón suma todas las señales \emph{ponderadas} y, si el total supera cierto umbral, se ``activa'' y devuelve 1; en caso contrario, devuelve 0. 
+Podría decirse que este proceso de decisión binaria lo convierte en un clasificador.
+\emph{El diagrama de la Figura~\ref{fig:perceptron} ilustra estos componentes, los cuales se definen formalmente a continuación.}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  inpt/.style={draw,rectangle,rounded corners,minimum width=16mm,minimum height=7mm,fill=dlblueLight},
+  wgt/.style={draw,rectangle,minimum width=14mm,minimum height=7mm,fill=white},  % Cajas para los pesos
+  op/.style={draw,circle,minimum size=9mm,inner sep=0pt,fill=dlgreenLight},
+  lbl/.style={font=\small},
+]
+  % Entradas (x_i)
+  \node[inpt] (x1) at (0,2.5) {$x_1$};
+  \node[inpt] (x2) at (0,0) {$x_2$};
+  \node at (0,-1.25) {$\vdots$};  % Puntos verticales
+  \node[inpt] (xm) at (0,-2.5) {$x_m$};
+
+  % Pesos como cajas (w_i)
+  \node[wgt] (w1) at (2,2.5) {$w_1$};
+  \node[wgt] (w2) at (2,0) {$w_2$};
+  \node[wgt] (wm) at (2,-2.5) {$w_m$};
+
+  % Sesgo (b) con flecha directa a la suma
+  \node[draw,rectangle,rounded corners,minimum width=12mm,minimum height=7mm,fill=dlorangeLight] (bias) at (3.8,2.0) {$b$};
+
+  % Nodos principales: suma ponderada, activación y salida
+  \node[op] (sum) at (3.8,0) {$\Sigma$};
+  \node[op] (act) at (6.2,0) {$\phi$};
+  \node[inpt,fill=dlorangeLight] (out) at (8.4,0) {$\hat{y}$};
+
+  % Flechas desde x_i hacia w_i
+  \draw[-{Stealth}] (x1) -- (w1);
+  \draw[-{Stealth}] (x2) -- (w2);
+  \draw[-{Stealth}] (xm) -- (wm);
+
+  % Flechas desde w_i hacia la suma ponderada
+  \draw[-{Stealth}] (w1) -- (sum);
+  \draw[-{Stealth}] (w2) -- (sum);
+  \draw[-{Stealth}] (wm) -- (sum);
+
+  % Flecha del sesgo a la suma (sin peso intermedio)
+  \draw[-{Stealth}] (bias) -- node[midway,right,lbl]{sesgo} (sum);
+
+  % Flechas internas: suma -> activación -> salida
+  \draw[-{Stealth}] (sum) -- node[midway,above,lbl]{$u$} (act);
+  \draw[-{Stealth}] (act) -- node[midway,above,lbl]{$\phi(u)$} (out);
+
+% Distinción final: flechas directas de \hat{y} hacia las cajas 1 y 0
+  \node[draw,rectangle,minimum width=10mm,minimum height=6mm] (out1) at (10.2,0.7) {$1$};
+  \node[draw,rectangle,minimum width=10mm,minimum height=6mm] (out0) at (10.2,-0.7) {$0$};
+  \draw[-{Stealth}] (out.east) -- (out1.west);
+  \draw[-{Stealth}] (out.east) -- (out0.west);
+
+  % Etiquetas explicativas
+  \node[lbl] at (3.7,-1.0) {suma ponderada};
+  \node[lbl] at (6.3,-1.0) {activación};
+  \node[font=\small] at (0,-3.6) {entradas $x_i$};
+  \node[font=\small] at (2,-3.6) {pesos $w_i$};
+  \node[lbl] at (9,-1.7) {salida binaria};
+\end{tikzpicture}
+\caption{Diagrama del perceptrón: suma ponderada de las entradas y función de activación.}
+\label{fig:perceptron}
+\end{figure}
+
+\paragraph{Definición formal}
+Más rigurosamente, entendemos al perceptrón como una función compuesta por una función de combinación lineal o suma ponderada ($u(\vec{x}, \vec{w}, b)$) y una función de activación escalón ($\phi(u)$).
+
+El perceptrón recibe tres argumentos: un vector columna de entradas binarias $\vec{x}$, un vector columna de pesos $\vec{w}$ y un número real o escalar $b$, llamado sesgo. La función, tras procesar las entradas, devuelve un valor binario $\hat{y}$, que indica si este fue activado o no. Se detallan a continuación:
+
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item $\vec{x} = (x_1, x_2, \ldots, x_m)^\top \in \{0,1\}^m$ es el vector columna de entradas binarias (características). Los valores $x_i$ solo pueden ser $0$ o $1$, y $m$ es la cantidad de dimensiones del vector, es decir, la cantidad de entradas.
+  \item $\vec{w} = (w_1, w_2, \ldots, w_m)^\top \in \mathbb{R}^m$ es el vector columna de \textbf{pesos} (\emph{weights}), que ponderan o escalan la importancia de cada entrada binaria. Los valores $w_i$ son números reales, y la dimensión $m$ coincide con la de $\vec{x}$, condición necesaria para que el producto escalar $\vec{w}^\top \vec{x}$ esté definido.
+  \item $b \in \mathbb{R}$ es el \textbf{sesgo} (\emph{bias}), un parámetro de desplazamiento u \emph{offset} que ajusta el umbral de activación de la neurona.
+  \item $\hat{y} \in \{0,1\}$ es el resultado binario final de la función, que indica la activación (o no) del perceptrón.
+\end{itemize}
+
+Así, queda definido el dominio de la función del perceptrón, y su proceso se detalla a continuación:
+
+$$P: \{0,1\}^m \times \mathbb{R}^m \times \mathbb{R} \to \{0,1\}$$
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  scale=1.2,
+  transform shape,
+  node distance=0.8cm and 1.2cm,
+  box/.style={draw, rectangle, rounded corners, minimum width=2.2cm, minimum height=0.9cm, align=center, font=\scriptsize},
+  arrow/.style={-{Stealth}, thick},
+  label/.style={font=\tiny, align=center}
+]
+  \node[box, fill=dlblueLight!30] (input) {
+    $\vec{x} \in \{0,1\}^m$ \\
+    $\vec{w} \in \mathbb{R}^m$ \\
+    $b \in \mathbb{R}$
+  };
+  \node[box, fill=dlgreenLight!30, right=of input] (linear) {
+    $u = \vec{w}^\top \vec{x} + b$ \\
+    $\in \mathbb{R}$
+  };
+  \node[box, fill=dlorangeLight!30, right=of linear] (activation) {
+    $\phi(u) = \begin{cases}1 & u \ge 0\\0 & u<0\end{cases}$ \\
+    $\in \{0,1\}$
+  };
+  \node[box, fill=red!20, right=of activation] (output) {
+    $\hat{y} = \phi(u)$ \\
+    $\in \{0,1\}$
+  };
+
+  \draw[arrow] (input) -- node[label, above] {producto punto \\ + sesgo} (linear);
+  \draw[arrow] (linear) -- node[label, above] {escalón} (activation);
+  \draw[arrow] (activation) -- node[label, above] {composición} (output);
+
+  % Etiquetas inferiores (más compactas)
+  \node[font=\tiny, below=0.1cm of input] {Vector / escalar};
+  \node[font=\tiny, below=0.1cm of linear] {Escalar real};
+  \node[font=\tiny, below=0.1cm of activation] {Binario};
+  \node[font=\tiny, below=0.1cm of output] {Binario final};
+\end{tikzpicture}
+\caption{Recorrido de las variables en el perceptrón.}
+\label{fig:viajevariables}
+\end{figure}
+
+\paragraph{Paso 1: Entrada neta}
+Primero, se calcula la suma \emph{ponderada} de las entradas más el sesgo. Esta operación pondera los vectores $\vec{x}$ y $\vec{w}$, cuyo producto escalar las combina en un número real, y le suma el sesgo $b$. Formalmente:
+
+$$u: \{0,1\}^m \times \mathbb{R}^m \times \mathbb{R} \to \mathbb{R}$$
+
+\begin{equation}
+\label{eq:perceptron-u}
+u(\vec{x}, \vec{w}, b) = \vec{w}^\top \vec{x} + b = \sum_{i=1}^{m} w_i x_i + b = w_1 x_1 + w_2 x_2 + \cdots + w_m x_m + b
+\end{equation}
+
+\textbf{Nota sobre la notación:} Dado que los vectores $\vec{x}$ y $\vec{w}$ se definen como vectores columna, la transpuesta $\vec{w}^\top$ convierte a $\vec{w}$ en un vector fila para que el producto $\vec{w}^\top \vec{x}$ (fila por columna) sea un escalar, que corresponde a la suma $\sum_{i=1}^{m} w_i x_i$.
+
+\textbf{Nota sobre variantes del diagrama:} El diagrama muestra la representación \textbf{directa} del sesgo, donde $b$ se suma como término independiente: $u = \sum_{i=1}^{m} w_i x_i + b$. Existe una variante equivalente, que añade una entrada ficticia $x_0 = 1$ y un peso $w_0 = b$, unificando la operación en una única suma ponderada:
+\[
+u = \sum_{i=0}^{m} w_i x_i = w_0 \cdot 1 + w_1 x_1 + \cdots + w_m x_m = b + w_1 x_1 + \cdots + w_m x_m.
+\]
+Su utilidad es principalmente \textbf{algebraica}: permite expresar el perceptrón como un único producto punto $\mathbf{w}^\top \mathbf{x}$, simplificando derivadas, reglas de aprendizaje y demostraciones teóricas. Ambas representaciones son matemáticamente equivalentes y su elección es contextual.
+
+\paragraph{Paso 2: Función de activación}
+El valor resultante $u$ (que es un número real) se transforma en una salida binaria, que es $1$ si $u \geq 0$, y $0$ si $u < 0$. Esto se logra mediante la función de activación escalón unitario, la cual introduce la no linealidad y toma la decisión final de activación:
+
+$$\phi: \mathbb{R} \to \{0,1\}$$
+
+\begin{equation}
+\phi(u) = 
+\begin{cases} 
+1 & \text{si } u \geq 0, \\
+0 & \text{si } u < 0.
+\end{cases}
+\end{equation}
+
+La Figura~\ref{fig:escalon} muestra su forma: para cualquier valor negativo de $u$, la salida es $0$; para $u$ igual o mayor que cero, la salida es $1$.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.8]
+  % Ejes
+  \draw[-{Stealth}] (-3.5,0) -- (3.5,0) node[right] {$u$};
+  \draw[-{Stealth}] (0,-0.5) -- (0,2.5) node[above] {$\phi(u)$};
+  % Línea horizontal en y=0 para u<0
+  \draw[thick] (-3,0) -- (0,0);
+  % Línea horizontal en y=1 para u>0
+  \draw[thick] (0,1) -- (3,1);
+  % Punto abierto en (0,0) (no incluido)
+  \filldraw[fill=white,draw=black] (0,0) circle (2pt);
+  % Punto cerrado en (0,1) (incluido)
+  \filldraw[fill=black,draw=black] (0,1) circle (2pt);
+  % Etiquetas de los ejes
+  \node at (-0.3,-0.3) {$0$};
+  \node at (-0.3,1.1) {$1$};
+\end{tikzpicture}
+\caption{Función de activación escalón unitario.}
+\label{fig:escalon}
+\end{figure}
+
+\paragraph{Paso 3: Salida final del perceptrón}
+Finalmente, la salida del modelo es la composición de la combinación lineal afín (suma ponderada) y la función de activación:
+\begin{equation}
+\label{eq:perceptron-y}
+\hat{y} = P(\vec{x}, \vec{w}, b) = \phi\bigl( u(\vec{x}, \vec{w}, b) \bigr) 
+= \phi\bigl( \vec{w}^\top \vec{x} + b \bigr).
+\end{equation}
+
+En resumen, el perceptrón transforma un vector de entradas binarias $\vec{x}$ en una salida binaria $\hat{y}$ mediante una suma ponderada ajustada por un sesgo y una decisión de umbral. Los parámetros del modelo, $\vec{w}$ y $b$, son los que se ajustan durante el entrenamiento para que la salida $\hat{y}$ se aproxime al valor deseado para cada ejemplo de entrada.
